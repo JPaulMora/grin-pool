@@ -3,6 +3,9 @@
 # builder stage
 FROM rust:latest as builder
 
+ARG BUILD_DATE
+ARG VCS_REF
+
 RUN rustup update && \
     set -ex && \
     apt-get update && \
@@ -47,7 +50,17 @@ RUN target/release/grin ${NET_FLAG} server config && \
 
 
 # runtime stage
-FROM docker.mwgrinpool.com:5001/keybase:latest
+FROM funkypenguin/grinpool-keybase
+
+# Now we DO need these, for the auto-labeling of the image
+ARG BUILD_DATE
+ARG VCS_REF
+
+# Good docker practice, plus we get microbadger badges
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-url="https://github.com/funkypenguin/grinpool.git" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.schema-version="2.2-r1"
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     locales \

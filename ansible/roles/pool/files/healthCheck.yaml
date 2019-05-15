@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: healthcheck
-        image: docker.mwgrinpool.com:5001/services:latest
+        image: funkypenguin/grinpool-services
 #        command: ["sleep", "9999"]
         command: ["/usr/local/bin/healthCheck.py"]
         ports:

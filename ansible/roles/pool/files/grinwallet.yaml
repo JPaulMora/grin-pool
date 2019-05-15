@@ -37,7 +37,7 @@ spec:
       hostname: "grinwallet"
       containers:
       - name: public
-        image: docker.mwgrinpool.com:5001/grin:latest
+        image: funkypenguin/grinpool-grin
         args: ["/run-wallet.sh", "public"]
         #args: ["sleep", "9999999"]
         env:
@@ -54,7 +54,7 @@ spec:
         - mountPath: /wallet
           name: grinwallet
       - name: private
-        image: docker.mwgrinpool.com:5001/grin:latest
+        image: funkypenguin/grinpool-grin
         #command: ["sleep", "9999999999"]
         command: ["/run-wallet.sh", "private"]
         env:
@@ -78,7 +78,7 @@ spec:
         - mountPath: /keybase
           name: keybase
       - name: api
-        image: docker.mwgrinpool.com:5001/services:latest
+        image: funkypenguin/grinpool-services
         #command: ["sleep", "9999999999"]
         command: ["/usr/local/bin/api/payment_api.py"]
         env:
@@ -110,7 +110,7 @@ spec:
         ports:
         - containerPort: 13425
       - name: keybase
-        image: docker.mwgrinpool.com:5001/keybase:latest
+        image: funkypenguin/grinpool-keybase
         command: ["/entrypoint.sh"]
         #command: ["sleep", "9909999"]
         env:

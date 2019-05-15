@@ -50,7 +50,7 @@ spec:
     spec:
       containers:
       - name: grin
-        image: docker.mwgrinpool.com:5001/grin:latest
+        image: funkypenguin/grinpool-grin
         #command: ["sleep", "9999999"]
         command: ["/run.sh"]
         ports:
@@ -61,7 +61,7 @@ spec:
         - name: grinblockchain
           mountPath: /server
       - name: sharewatcher
-        image: docker.mwgrinpool.com:5001/logstash:latest
+        image: funkypenguin/grinpool-logstash
         command: ["/run.sh", "grinsharefilter.conf"]
 #        command: ["sleep", "9999999"]
         env:

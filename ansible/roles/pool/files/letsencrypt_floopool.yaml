@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
           - name: letsencrypt
-            image: docker.mwgrinpool.com:5001/letsencrypt:latest
+            image: funkypenguin/grinpool-letsencrypt
             command: ["/entrypoint"]
             #command: ["sleep", "9999999"]
             env:

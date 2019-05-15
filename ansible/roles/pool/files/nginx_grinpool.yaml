@@ -103,7 +103,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: docker.mwgrinpool.com:5001/mwnginx:latest
+        image: funkypenguin/grinpool-mwnginx
         #command: ["sleep", "9999999"]
         command: ["/entrypoint"]
         ports:

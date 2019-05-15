@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: webui
-        image: docker.mwgrinpool.com:5001/webui-js:latest
+        image: funkypenguin/grinpool-webui-js
 #        command: ["sleep", "9999999"]
         command: ["yarn", "start"]
         ports:
