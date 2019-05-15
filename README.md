@@ -30,7 +30,13 @@ Got more details at:
 
 # What is funkypenguin/grinpool ?
 
-A fork of grin-pool/grin-pool, in an attempt to create a(nother) GRIN mining pool
+A fork of grin-pool/grin-pool, in an attempt to create a(nother) GRIN mining pool. This repository creates the following containers, which are all elements of the pool solution:
+
+Name | Description | Build
+--|--|--
+[funkypenguin/grinpool-grin](https://hub.docker.com/r/funkypenguin/grinpool-grin/)<br/>[![Size](https://images.microbadger.com/badges/image/funkypenguin/grinpool-grin.svg)](https://hub.docker.com/r/funkypenguin/grinpool-grin/)| The actual grin daemon / wallet |[![Docker Pulls](https://img.shields.io/docker/build/funkypenguin/grinpool-grin.svg)](https://hub.docker.com/r/funkypenguin/grinpool-grin/)<br/>[![Build status](https://img.shields.io/docker/cloud/automated/funkypenguin/grinpool-grin.svg)](https://hub.docker.com/r/funkypenguin/grinpool-grin/)
+
+
 
 # Why should I use this?
 
