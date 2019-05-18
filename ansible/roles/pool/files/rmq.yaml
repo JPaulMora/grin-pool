@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: rmq
-        image: docker.mwgrinpool.com:5001/rmq:latest
+        image: funkypenguin/grinpool-rmq
 #        command: ["sleep", "9999999"]
 #        command: ["/bin/sh", "/usr/lib/rabbitmq/bin/rabbitmq-server"]
         ports:

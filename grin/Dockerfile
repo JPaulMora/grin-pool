@@ -1,7 +1,18 @@
 # Multistage docker build, requires docker 17.05
 
 # builder stage
-FROM rust:latest as builder
+FROM rust:1.31 as builder
+
+ARG BUILD_DATE
+ARG VCS_REF
+
+# Allows us to auto-discover the latest release from the repo
+ARG REPO=mimblewimble/grin
+ENV REPO=${REPO}
+
+# However, for now we'll use TAG instead to be explict
+ARG TAG=v1.0.3
+ENV TAG=${TAG}
 
 RUN rustup update && \
     set -ex && \
@@ -19,30 +30,18 @@ RUN rustup update && \
 WORKDIR /usr/src/grin
 
 # Copying Grin
-RUN git clone https://github.com/mimblewimble/grin.git .; git checkout master; git pull;
-
-# Building Grin
-RUN cargo build --release
-
-# Update and build grin
-RUN touch asxxyyzzzzqyxxxy
-RUN git fetch && \
-    git pull && \
-    git checkout master
+RUN git clone --single-branch --branch $TAG https://github.com/mimblewimble/grin.git .
 
 # Monkey Patch
 RUN sed -i -e 's/127\.0\.0\.1:13420/0.0.0.0:13420/g' wallet/src/command.rs
-#COPY stratumserver.rs servers/src/mining/stratumserver.rs
+COPY stratumserver.rs servers/src/mining/stratumserver.rs
 
 RUN cargo build --release
 
 # Generate configuration
-# XXX TODO: REMOVE FOR MAINNET
-ENV NET_FLAG "--floonet"
 RUN mkdir -p /root/.grin && \
     cd /root/.grin && \
-    ln -s . floo && \
-    ln -s . main
+        ln -s . main
 RUN target/release/grin ${NET_FLAG} server config && \
     echo dummy > dummy && \
     echo dummy >> dummy && \
@@ -50,11 +49,17 @@ RUN target/release/grin ${NET_FLAG} server config && \
 
 
 # runtime stage
-FROM docker.mwgrinpool.com:5001/keybase:latest
+FROM funkypenguin/grinpool-keybase
 
-# XXX TODO: REMOVE FOR MAINNET
-ENV NET_FLAG "--floonet"
+# Now we DO need these, for the auto-labeling of the image
+ARG BUILD_DATE
+ARG VCS_REF
 
+# Good docker practice, plus we get microbadger badges
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-url="https://github.com/funkypenguin/grinpool.git" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.schema-version="2.2-r1"
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     locales \
@@ -87,9 +92,9 @@ RUN sed -i 's/^db_root = .*$/db_root = "\/server\/.grin"/' /usr/src/grin/grin-se
     sed -i 's/^run_tui = .*$/run_tui = false/' /usr/src/grin/grin-server.toml && \
     sed -i 's/^run_test_miner = .*$/run_test_miner = false/' /usr/src/grin/grin-server.toml && \
     sed -i 's/^host = .*$/host = "0.0.0.0"/' /usr/src/grin/grin-server.toml && \
-    sed -i 's/^port = .*$/port = 13414/' /usr/src/grin/grin-server.toml && \
-    sed -i 's/^?peer_max_count = .*$/peer_max_count = 75/' /usr/src/grin/grin-server.toml && \
-    sed -i 's/^?peer_min_preferred_count = .*$/peer_min_preferred_count = 15/' /usr/src/grin/grin-server.toml && \
+    sed -i 's/^port = .*$/port = 3414/' /usr/src/grin/grin-server.toml && \
+    sed -i 's/^#peer_max_count = .*$/peer_max_count = 250/' /usr/src/grin/grin-server.toml && \
+    sed -i 's/^#peer_min_preferred_count = .*$/peer_min_preferred_count = 16/' /usr/src/grin/grin-server.toml && \
     sed -i 's/^enable_stratum_server = .*$/enable_stratum_server = true/' /usr/src/grin/grin-server.toml && \
     sed -i 's/^stratum_server_addr = .*$/stratum_server_addr = "0.0.0.0:13416"/' /usr/src/grin/grin-server.toml && \
     sed -i 's/^attempt_time_per_block = .*$/attempt_time_per_block = 300/' /usr/src/grin/grin-server.toml && \

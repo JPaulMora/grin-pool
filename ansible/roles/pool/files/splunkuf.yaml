@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: splunkuf
-        image: docker.io/grinpool/universalforwarder:latest
+        image: funkypenguin/grinpool-universalforwarder
         env:
         - name: SPLUNK_START_ARGS
           value: "--accept-license"

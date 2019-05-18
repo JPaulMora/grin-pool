@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: splunk
-        image: docker.mwgrinpool.com:5001/splunk:latest
+        image: funkypenguin/grinpool-splunk
         command: ["sleep", "9999999"]
 #        command: ["/sbin/entrypoint.sh", "start"]
 #        command: ["/run.sh"]
