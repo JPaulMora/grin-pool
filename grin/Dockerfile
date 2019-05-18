@@ -1,10 +1,18 @@
 # Multistage docker build, requires docker 17.05
 
 # builder stage
-FROM rust:latest as builder
+FROM rust:1.31 as builder
 
 ARG BUILD_DATE
 ARG VCS_REF
+
+# Allows us to auto-discover the latest release from the repo
+ARG REPO=mimblewimble/grin
+ENV REPO=${REPO}
+
+# However, for now we'll use TAG instead to be explict
+ARG TAG=v1.0.3
+ENV TAG=${TAG}
 
 RUN rustup update && \
     set -ex && \
@@ -22,16 +30,7 @@ RUN rustup update && \
 WORKDIR /usr/src/grin
 
 # Copying Grin
-RUN git clone https://github.com/mimblewimble/grin.git .; git checkout master; git pull;
-
-# Building Grin
-RUN cargo build --release
-
-# Update and build grin
-RUN touch sxxyyzzzzqyxxxzfggx
-RUN git fetch && \
-    git pull && \
-    git checkout v1.0.0
+RUN git clone --single-branch --branch $TAG https://github.com/mimblewimble/grin.git .
 
 # Monkey Patch
 RUN sed -i -e 's/127\.0\.0\.1:13420/0.0.0.0:13420/g' wallet/src/command.rs
